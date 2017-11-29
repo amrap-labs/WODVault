@@ -74,6 +74,15 @@
         }
       },
       {
+        "package": "FeedKit",
+        "repositoryURL": "https://github.com/nmdias/FeedKit.git",
+        "state": {
+          "branch": null,
+          "revision": "ff7ed6752299b422d636228a7b3e2fd00b7e8b13",
+          "version": "6.2.0"
+        }
+      },
+      {
         "package": "Fluent",
         "repositoryURL": "https://github.com/vapor/fluent.git",
         "state": {
