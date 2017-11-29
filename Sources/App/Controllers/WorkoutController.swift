@@ -14,6 +14,6 @@ final class WorkoutController: ResourceRepresentable {
     // MARK: Resource Methods
     
     func loadAll(_ request: Request) throws -> ResponseRepresentable {
-        return try [Workout(date: Date())].makeJSON()
+        return try Workout.all().makeJSON()
     }
 }

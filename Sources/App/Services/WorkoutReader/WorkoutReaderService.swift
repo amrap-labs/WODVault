@@ -17,7 +17,6 @@ class WorkoutReaderService {
     
     init(for urls: [String]) {
         urls.forEach { (url) in
-            print("READING WORKOUTS")
             if let reader = WorkoutReader(url: url) {
                 self.readers[url] = reader
             }
