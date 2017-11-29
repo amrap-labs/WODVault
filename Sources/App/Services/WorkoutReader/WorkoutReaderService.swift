@@ -11,15 +11,28 @@ class WorkoutReaderService {
     
     // MARK: Properties
     
-    private(set) var readers = [String : WorkoutReader]()
+    private var readers = [String : WorkoutReader]()
     
     // MARK: Init
     
     init(for urls: [String]) {
         urls.forEach { (url) in
+            print("READING WORKOUTS")
             if let reader = WorkoutReader(url: url) {
                 self.readers[url] = reader
             }
+        }
+    }
+    
+    // MARK: Readers
+    
+    func reader(for url: String) -> WorkoutReader? {
+        return readers[url]
+    }
+    
+    func updateAll() {
+        readers.values.forEach { (reader) in
+            reader.update()
         }
     }
 }

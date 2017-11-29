@@ -14,7 +14,7 @@ let package = Package(
         .package(url: "https://github.com/BrettRToomey/Jobs.git", from: "1.1.2")
     ],
     targets: [
-        .target(name: "App", dependencies: ["Vapor", "FluentProvider"],
+        .target(name: "App", dependencies: ["Vapor", "FluentProvider", "Jobs"],
                 exclude: [
                     "Config",
                     "Public",

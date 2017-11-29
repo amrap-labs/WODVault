@@ -1,12 +1,16 @@
 @_exported import Vapor
+import Jobs
 
 extension Droplet {
     public func setup() throws {
         try setupRoutes()
         // Do any additional droplet setup
         
-        // Workout Reader
+        // Workout Reader job
         let feeds = (config["sources", "feeds"]?.array ?? []).flatMap({ $0.string })
-        let readerService = WorkoutReaderService(for: feeds)
+        Jobs.add(interval: .seconds(10)) {
+            let readerService = WorkoutReaderService(for: feeds)
+            readerService.updateAll()
+        }
     }
 }
