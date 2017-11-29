@@ -2,7 +2,7 @@ import Vapor
 import HTTP
 
 final class WorkoutController: ResourceRepresentable {
-
+    
     // MARK: ResourceRepresentable
     
     func makeResource() -> Resource<Workout> {
