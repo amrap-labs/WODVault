@@ -7,7 +7,8 @@ final class Workout: Model {
     
     // MARK: Properties and database keys
     
-    private(set) var id: String
+    private(set) var id: String?
+    private(set) var guid: String
     private(set) var title: String
     private(set) var publishDate: Date
     private(set) var rawDescription: String
@@ -16,18 +17,19 @@ final class Workout: Model {
     // Database columns
     struct Keys {
         static let id = "id"
+        static let guid = "guid"
         static let title = "title"
         static let publishDate = "pubDate"
         static let rawDescription = "rawDescription"
         static let link = "link"
     }
     
-    init(id: String,
+    init(guid: String,
          title: String,
          publishDate: Date,
          rawDescription: String,
          link: String) {
-        self.id = id
+        self.guid = guid
         self.title = title
         self.publishDate = publishDate
         self.rawDescription = rawDescription
@@ -40,6 +42,7 @@ final class Workout: Model {
     /// database row
     init(row: Row) throws {
         id = try row.get(Workout.Keys.id)
+        guid = try row.get(Workout.Keys.guid)
         title = try row.get(Workout.Keys.title)
         publishDate = try row.get(Workout.Keys.publishDate)
         rawDescription = try row.get(Workout.Keys.rawDescription)
@@ -50,6 +53,7 @@ final class Workout: Model {
     func makeRow() throws -> Row {
         var row = Row()
         try row.set(Workout.Keys.id, id)
+        try row.set(Workout.Keys.guid, guid)
         try row.set(Workout.Keys.title, title)
         try row.set(Workout.Keys.publishDate, publishDate)
         try row.set(Workout.Keys.rawDescription, rawDescription)
@@ -62,6 +66,7 @@ extension Workout: Preparation {
     static func prepare(_ database: Database) throws {
         try database.create(self) { builder in
             builder.id()
+            builder.string(Workout.Keys.guid, unique: true)
             builder.string(Workout.Keys.title)
             builder.date(Workout.Keys.publishDate)
             builder.string(Workout.Keys.rawDescription)
@@ -79,7 +84,7 @@ extension Workout: Preparation {
 extension Workout: JSONConvertible {
     convenience init(json: JSON) throws {
         self.init(
-            id: try json.get(Workout.Keys.id),
+            guid: try json.get(Workout.Keys.guid),
             title: try json.get(Workout.Keys.title),
             publishDate: try json.get(Workout.Keys.publishDate),
             rawDescription: try json.get(Workout.Keys.rawDescription),
@@ -89,7 +94,7 @@ extension Workout: JSONConvertible {
     
     func makeJSON() throws -> JSON {
         var json = JSON()
-        try json.set(Workout.Keys.id, id)
+        try json.set(Workout.Keys.guid, guid)
         try json.set(Workout.Keys.title, title)
         try json.set(Workout.Keys.publishDate, publishDate)
         try json.set(Workout.Keys.rawDescription, rawDescription)

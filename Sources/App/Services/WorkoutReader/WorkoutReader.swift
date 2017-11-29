@@ -66,7 +66,7 @@ class WorkoutReader {
 private extension Workout {
     
     static func fromRSSFeedItem(_ item: RSSFeedItem) -> Workout? {
-        guard let id = item.guid?.value,
+        guard let guid = item.guid?.value,
             let title = item.title,
             let description = item.description,
             let pubDate = item.pubDate,
@@ -74,7 +74,7 @@ private extension Workout {
             return nil
         }
         
-        return Workout(id: id,
+        return Workout(guid: guid,
                        title: title,
                        publishDate: pubDate,
                        rawDescription: description,
