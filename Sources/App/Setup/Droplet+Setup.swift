@@ -10,7 +10,7 @@ extension Droplet {
         let feeds = (config["sources", "feeds"]?.array ?? []).flatMap({ $0.string })
         Jobs.add(interval: .seconds(30)) {
             let readerService = WorkoutReaderService(for: feeds)
-            readerService.updateAll()
+//            readerService.updateAll()
         }
     }
 }
