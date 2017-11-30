@@ -13,8 +13,5 @@ extension Droplet {
         // Workouts
         let workoutController = WorkoutController()
         resource("workouts", workoutController)
-        get("workouts", "*") { request in
-            return try workoutController.loadAll(request)
-        }
     }
 }
