@@ -55,7 +55,7 @@ class WorkoutReader {
         }
         
         for result in results {
-            if let workout = Workout.fromRSSFeedItem(result) {
+            if let workout = Workout.fromRSSFeedItem(result, boxId: self.boxId) {
                 do {
                     let existing = try Workout.makeQuery().filter("guid", .equals, workout.guid).first()
                     if existing == nil { // ignore duplicates
@@ -71,7 +71,7 @@ class WorkoutReader {
 
 private extension Workout {
     
-    static func fromRSSFeedItem(_ item: RSSFeedItem) -> Workout? {
+    static func fromRSSFeedItem(_ item: RSSFeedItem, boxId: String) -> Workout? {
         guard let guid = item.guid?.value,
             let title = item.title,
             let description = item.description,
@@ -81,6 +81,7 @@ private extension Workout {
         }
         
         return Workout(guid: guid,
+                       boxId: boxId,
                        title: title,
                        publishDate: pubDate,
                        rawDescription: description,

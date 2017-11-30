@@ -10,6 +10,7 @@ final class Workout: Model {
     // MARK: Properties and database keys
     
     private(set) var guid: String
+    private(set) var boxId: String?
     private(set) var title: String
     private(set) var publishDate: Date
     private(set) var rawDescription: String
@@ -18,6 +19,7 @@ final class Workout: Model {
     // Database columns
     struct Keys {
         static let guid = "guid"
+        static let boxId = "boxId"
         static let title = "title"
         static let publishDate = "pubDate"
         static let rawDescription = "rawDescription"
@@ -25,11 +27,13 @@ final class Workout: Model {
     }
     
     init(guid: String,
+         boxId: String? = nil,
          title: String,
          publishDate: Date,
          rawDescription: String,
          link: String) {
         self.guid = guid
+        self.boxId = boxId
         self.title = title
         self.publishDate = publishDate
         self.rawDescription = rawDescription
@@ -42,6 +46,7 @@ final class Workout: Model {
     /// database row
     init(row: Row) throws {
         guid = try row.get(Workout.Keys.guid)
+        boxId = try row.get(Workout.Keys.boxId)
         title = try row.get(Workout.Keys.title)
         publishDate = try row.get(Workout.Keys.publishDate)
         rawDescription = try row.get(Workout.Keys.rawDescription)
@@ -52,6 +57,7 @@ final class Workout: Model {
     func makeRow() throws -> Row {
         var row = Row()
         try row.set(Workout.Keys.guid, guid)
+        try row.set(Workout.Keys.boxId, boxId)
         try row.set(Workout.Keys.title, title)
         try row.set(Workout.Keys.publishDate, publishDate)
         try row.set(Workout.Keys.rawDescription, rawDescription)
@@ -65,6 +71,7 @@ extension Workout: Preparation {
         try database.create(self) { builder in
             builder.id()
             builder.string(Workout.Keys.guid)
+            builder.string(Workout.Keys.boxId)
             builder.string(Workout.Keys.title)
             builder.date(Workout.Keys.publishDate)
             builder.string(Workout.Keys.rawDescription)

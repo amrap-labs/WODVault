@@ -19,8 +19,9 @@ struct WorkoutReaderSource {
     let url: String
     
     init?(config: Config) {
-        guard let boxId = config[Keys.boxId]?.string,
-            let url = config[Keys.url]?.string else {
+        let object = config.object
+        guard let boxId = object?[Keys.boxId]?.string,
+            let url = object?[Keys.url]?.string else {
             return nil
         }
         
