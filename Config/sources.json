@@ -1,5 +1,8 @@
 {
     "feeds": [
-              "https://www.crossfit3d.com/crossfit-3d?format=RSS"
+        {
+              "box-id": "358580",
+              "url": "https://www.crossfit3d.com/crossfit-3d?format=RSS"
+        }
     ]
 }

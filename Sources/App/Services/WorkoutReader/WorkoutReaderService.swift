@@ -15,10 +15,10 @@ class WorkoutReaderService {
     
     // MARK: Init
     
-    init(for urls: [String]) {
-        urls.forEach { (url) in
-            if let reader = WorkoutReader(url: url) {
-                self.readers[url] = reader
+    init(for sources: [WorkoutReaderSource]) {
+        sources.forEach { (source) in
+            if let reader = WorkoutReader(boxId: source.boxId, url: source.url) {
+                self.readers[source.url] = reader
             }
         }
     }

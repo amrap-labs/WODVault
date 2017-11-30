@@ -12,15 +12,17 @@ class WorkoutReader {
     
     // MARK: Properties
     
+    let boxId: String
     let url: URL
     private lazy var parser = FeedParser(URL: self.url)
     
     // MARK: Init
     
-    init?(url: String) {
+    init?(boxId: String, url: String) {
         guard let url = URL(string: url) else {
             return nil
         }
+        self.boxId = boxId
         self.url = url
     }
     
