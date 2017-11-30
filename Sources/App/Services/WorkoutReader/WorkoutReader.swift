@@ -27,6 +27,7 @@ class WorkoutReader {
     // MARK: Updating
     
     func update() {
+        print("UPDATING Feed: \(url)")
         parser?.parseAsync(queue: DispatchQueue.global(qos: .userInitiated), result: { (result) in
             if let error = result.error {
                 
@@ -54,7 +55,10 @@ class WorkoutReader {
         for result in results {
             if let workout = Workout.fromRSSFeedItem(result) {
                 do {
-                    try workout.save()
+                    let existing = try Workout.makeQuery().filter("guid", .equals, workout.guid).first()
+                    if existing == nil { // ignore duplicates
+                        try workout.save()
+                    }
                 } catch {
                     // TODO - Log
                 }

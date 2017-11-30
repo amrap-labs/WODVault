@@ -5,9 +5,10 @@ import HTTP
 final class Workout: Model {
     let storage = Storage()
     
+    static let idType: IdentifierType = .uuid
+    
     // MARK: Properties and database keys
     
-    private(set) var id: String?
     private(set) var guid: String
     private(set) var title: String
     private(set) var publishDate: Date
@@ -16,7 +17,6 @@ final class Workout: Model {
     
     // Database columns
     struct Keys {
-        static let id = "id"
         static let guid = "guid"
         static let title = "title"
         static let publishDate = "pubDate"
@@ -41,7 +41,6 @@ final class Workout: Model {
     /// Initializes the Post from the
     /// database row
     init(row: Row) throws {
-        id = try row.get(Workout.Keys.id)
         guid = try row.get(Workout.Keys.guid)
         title = try row.get(Workout.Keys.title)
         publishDate = try row.get(Workout.Keys.publishDate)
@@ -52,7 +51,6 @@ final class Workout: Model {
     // Serializes the Post to the database
     func makeRow() throws -> Row {
         var row = Row()
-        try row.set(Workout.Keys.id, id)
         try row.set(Workout.Keys.guid, guid)
         try row.set(Workout.Keys.title, title)
         try row.set(Workout.Keys.publishDate, publishDate)
@@ -66,7 +64,7 @@ extension Workout: Preparation {
     static func prepare(_ database: Database) throws {
         try database.create(self) { builder in
             builder.id()
-            builder.string(Workout.Keys.guid, unique: true)
+            builder.string(Workout.Keys.guid)
             builder.string(Workout.Keys.title)
             builder.date(Workout.Keys.publishDate)
             builder.string(Workout.Keys.rawDescription)
