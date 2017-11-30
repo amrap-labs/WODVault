@@ -8,6 +8,13 @@
 import Foundation
 import FeedKit
 
+protocol WorkoutReaderDelegate: class {
+    
+    func reader(_ reader: WorkoutReader, didBeginUpdating feedUrl: URL)
+    
+    func reader(_ reader: WorkoutReader, didFailToUpdate feedUrl: URL, becauseOf error: Error)
+}
+
 class WorkoutReader {
     
     // MARK: Properties
@@ -15,6 +22,8 @@ class WorkoutReader {
     let boxId: String
     let url: URL
     private lazy var parser = FeedParser(URL: self.url)
+    
+    weak var delegate: WorkoutReaderDelegate?
     
     // MARK: Init
     
@@ -29,10 +38,10 @@ class WorkoutReader {
     // MARK: Updating
     
     func update() {
-        print("UPDATING Feed: \(url)")
+        delegate?.reader(self, didBeginUpdating: url)
         parser?.parseAsync(queue: DispatchQueue.global(qos: .userInitiated), result: { (result) in
             if let error = result.error {
-                
+                self.delegate?.reader(self, didFailToUpdate: self.url, becauseOf: error)
             } else {
                 switch result {
                     
