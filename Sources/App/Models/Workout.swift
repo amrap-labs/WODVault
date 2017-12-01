@@ -2,7 +2,8 @@ import Vapor
 import FluentProvider
 import HTTP
 
-final class Workout: Model {
+final class Workout: Model, Paginatable, Timestampable {
+    
     let storage = Storage()
     
     static let idType: IdentifierType = .uuid

@@ -20,8 +20,9 @@ final class WorkoutController: ResourceRepresentable {
         
         let boxId = request.data[Workout.Keys.boxId]?.string
         
-        let results = try Workout.makeQuery().filter(Workout.Keys.boxId, .equals, boxId).all()
-        guard results.count > 0 else {
+        let query = try Workout.makeQuery().filter(Workout.Keys.boxId, .equals, boxId)
+        let results = try query.paginate(for: request)
+        guard results.data.count > 0 else {
             return ErrorResponse(status: .notFound)
         }
         
