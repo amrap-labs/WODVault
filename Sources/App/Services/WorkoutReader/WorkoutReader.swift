@@ -7,6 +7,7 @@
 
 import Foundation
 import FeedKit
+import Dispatch
 
 protocol WorkoutReaderDelegate: class {
     
