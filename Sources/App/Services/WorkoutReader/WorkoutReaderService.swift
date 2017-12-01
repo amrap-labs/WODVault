@@ -12,13 +12,23 @@ class WorkoutReaderService {
     
     // MARK: Properties
     
+    private static var shared: WorkoutReaderService?
+
     private var readers = [String : WorkoutReader]()
-    
     private weak var log: LogProtocol?
     
     // MARK: Init
     
-    init(for sources: [WorkoutReaderSource], log: LogProtocol) {
+    static func shared(for sources: [WorkoutReaderSource], log: LogProtocol) -> WorkoutReaderService {
+        if let shared = WorkoutReaderService.shared {
+            return shared
+        }
+        let service = WorkoutReaderService(for: sources, log: log)
+        shared = service
+        return service
+    }
+    
+    private init(for sources: [WorkoutReaderSource], log: LogProtocol) {
         self.log = log
         
         for source in sources {
@@ -50,6 +60,11 @@ extension WorkoutReaderService: WorkoutReaderDelegate {
     
     func reader(_ reader: WorkoutReader, didFailToUpdate feedUrl: URL, becauseOf error: Error) {
         log?.error("WRS - Feed Errored (\(feedUrl.absoluteString)):")
-        log?.error(error)
+        log?.error("      \(error)")
+    }
+    
+    func reader(_ reader: WorkoutReader, didLoad workouts: [Workout], newDiscoveries: Int) {
+        log?.info("WRS - Updated Feed (\(reader.url.absoluteString)):")
+        log?.info("      New Discoveries: \(newDiscoveries)")
     }
 }

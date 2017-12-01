@@ -13,6 +13,12 @@ protocol WorkoutReaderDelegate: class {
     func reader(_ reader: WorkoutReader, didBeginUpdating feedUrl: URL)
     
     func reader(_ reader: WorkoutReader, didFailToUpdate feedUrl: URL, becauseOf error: Error)
+    
+    func reader(_ reader: WorkoutReader, didLoad workouts: [Workout], newDiscoveries: Int)
+}
+
+enum WorkoutReaderError: Error {
+    case noResults
 }
 
 class WorkoutReader {
@@ -46,8 +52,12 @@ class WorkoutReader {
                 switch result {
                     
                 case .rss(let feed):
-                    self.parseResults(feed.items, completion: { (workout) in
-                        
+                    self.parseResults(feed.items,
+                                      success:
+                        { (workouts, newDiscoveries) in
+                            self.delegate?.reader(self, didLoad: workouts, newDiscoveries: newDiscoveries)
+                    }, failure: { (error) in
+                        self.delegate?.reader(self, didFailToUpdate: self.url, becauseOf: error)
                     })
                     
                 default:()
@@ -57,11 +67,15 @@ class WorkoutReader {
     }
     
     private func parseResults(_ results: [RSSFeedItem]?,
-                              completion: ([Workout]?) -> Void) {
+                              success: (_ workouts: [Workout], _ discoveries: Int) -> Void,
+                              failure: (Error) -> Void) {
         guard let results = results else {
-            completion(nil)
+            failure(WorkoutReaderError.noResults)
             return
         }
+        
+        var workouts = [Workout]()
+        var discoveryCount: Int = 0
         
         for result in results {
             if let workout = Workout.fromRSSFeedItem(result, boxId: self.boxId) {
@@ -69,12 +83,16 @@ class WorkoutReader {
                     let existing = try Workout.makeQuery().filter("guid", .equals, workout.guid).first()
                     if existing == nil { // ignore duplicates
                         try workout.save()
+                        discoveryCount += 1
                     }
+                    workouts.append(workout)
                 } catch {
-                    // TODO - Log
+                    failure(error)
                 }
             }
         }
+        
+        success(workouts, discoveryCount)
     }
 }
 
