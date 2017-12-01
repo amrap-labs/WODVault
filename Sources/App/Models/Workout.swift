@@ -19,10 +19,10 @@ final class Workout: Model {
     // Database columns
     struct Keys {
         static let guid = "guid"
-        static let boxId = "boxId"
+        static let boxId = "box_id"
         static let title = "title"
-        static let publishDate = "pubDate"
-        static let rawDescription = "rawDescription"
+        static let publishDate = "pub_date"
+        static let rawDescription = "raw_description"
         static let link = "link"
     }
     
