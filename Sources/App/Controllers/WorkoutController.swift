@@ -26,3 +26,6 @@ final class WorkoutController: ResourceRepresentable {
         return try results.makeJSON()
     }
 }
+
+extension WorkoutController: EmptyInitializable {
+}

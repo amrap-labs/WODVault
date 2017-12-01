@@ -11,7 +11,6 @@ extension Droplet {
         get("description") { req in return req.description }
         
         // Workouts
-        let workoutController = WorkoutController()
-        resource("workouts", workoutController)
+        try resource("workouts", WorkoutController.self)
     }
 }
