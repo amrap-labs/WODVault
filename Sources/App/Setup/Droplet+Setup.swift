@@ -8,7 +8,7 @@ extension Droplet {
         
         // Workout Reader job
         let feeds = (config["sources"]?.array ?? []).flatMap({ WorkoutReaderSource(config: $0) })
-        Jobs.add(interval: .hours(1)) {
+        Jobs.add(interval: .seconds(900)) {
             let readerService = WorkoutReaderService.shared(for: feeds, log: self.log)
             readerService.updateAll()
         }
