@@ -17,6 +17,12 @@ final class Workout: Model, Paginatable, Timestampable {
     private(set) var rawDescription: String
     private(set) var link: String
     
+    static var defaultPageSorts: [Sort] {
+        return [
+            Sort(self, Keys.publishDate, .descending)
+        ]
+    }
+    
     // Database columns
     struct Keys {
         static let guid = "guid"
