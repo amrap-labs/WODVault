@@ -14,13 +14,11 @@ final class WorkoutController: ResourceRepresentable {
     // MARK: Resource Methods
     
     func loadAll(_ request: Request) throws -> ResponseRepresentable {
-        if let badResponse = request.isMissingData(for: [Workout.Keys.boxId]) {
-            return badResponse
+        
+        var query = try Workout.makeQuery()
+        if let boxId = request.data[Workout.Keys.boxId]?.string {
+            query = try query.filter(Workout.Keys.boxId, .equals, boxId)
         }
-        
-        let boxId = request.data[Workout.Keys.boxId]?.string
-        
-        let query = try Workout.makeQuery().filter(Workout.Keys.boxId, .equals, boxId)
         let results = try query.paginate(for: request)
         guard results.data.count > 0 else {
             return ErrorResponse(status: .notFound)
